@@ -1,0 +1,2 @@
+# Sudoku
+Doresc sa fac sudoku pentru proiectul la IP , ce va consta in realizarea unui generator de matrici 9X9 pe niveluri diferite cu hinturi dupa fiecare nivel in parte . Jocul va putea fi jucat de un player , dar bineinteles de mai multe ori , atat timp cat se va loga cu numele . De asemenea jucatorul va putea da repaly astfel incat si scorul va incepe de la 0 si timpul ramas de asemenea se va reseta . Pe timpul duratei unui joc va exista cate o copie a fiecarui pas realizat . 
