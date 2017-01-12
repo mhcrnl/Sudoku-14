@@ -87,12 +87,8 @@ bool checkLine(int line, int val,int sudoku[9][9])
         {
             return false;
         }
-        else
-        {
-            return true;
-        }
     }
-
+    return true;
 }
 bool checkColumn (int column, int val,int sudoku[9][9])
 {
@@ -102,11 +98,8 @@ bool checkColumn (int column, int val,int sudoku[9][9])
         {
             return false;
         }
-        else
-        {
-            return true;
-        }
     }
+    return true;
 }
 
 bool checkSquare (int line, int column, int val,int sudoku[9][9])
@@ -117,17 +110,14 @@ bool checkSquare (int line, int column, int val,int sudoku[9][9])
     {
         for(int index2 = column-column1; index2 < column-column1+3; index2++)
         {
+            //cout<<"sjsbsmhbs  "<<index1<<" "<<index2<<endl;
             if(sudoku[index1][index2]==val)
             {
                 return false;
             }
-            else
-            {
-                return true;
-
-            }
         }
     }
+    return true;
 }
 bool valid(int line,int column,int val,int sudoku[9][9])
 {
@@ -148,8 +138,8 @@ void random (int sudoku[][9], int number_poz)
     while(index < number_poz)
     {
 
-        line = rand()%9 + 1;
-        column = rand()%9 + 1;
+        line = rand()%9;
+        column = rand()%9;
         val = rand()%9 + 1;
         cout<<line<<" ";
         cout<<column<<" ";
@@ -167,7 +157,7 @@ int main()
     int sudoku[9][9];
     int number_poz;
     initializare(sudoku);
-    random(sudoku,80);
+    random(sudoku,81);
     display(sudoku);
     return 0;
 }
