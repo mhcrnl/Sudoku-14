@@ -1,20 +1,7 @@
-//#include"Header.h";
-#include<iostream>
-#include<fstream>
-#include<string>
-#include<sys/stat.h>
-#include<cstdlib>
-#include<time.h>
-#include <stdio.h>
-#include <windows.h>
-using namespace std;
-#define MAX_LINII 9
-#define MAX_COLOANE 9
+#include"Header.h";
 
-struct fill_empty
-{
-	bool ok;
-}matrix1[MAX_LINII][MAX_COLOANE];
+
+
 
 void setColor(unsigned short color)
 {
