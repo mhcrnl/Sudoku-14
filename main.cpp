@@ -1,8 +1,12 @@
 //#include"Header.h";
+
 #include<iostream>
 #include<fstream>
 #include<string>
 #include<sys/stat.h>
+#include<cstdlib>
+#include<time.h>
+#include <stdio.h>
 using namespace std;
 #define MAX_LINII 9
 #define MAX_COLOANE 9
@@ -10,7 +14,6 @@ struct fill_empty
 {
 	bool ok;
 }matrix1[MAX_LINII][MAX_COLOANE];
-
 /*bool fileExists(const std::string& filename)
 {
 struct stat buf;
@@ -94,7 +97,7 @@ void write(int matrix[MAX_LINII][MAX_COLOANE])
 		}
 
 	}
-
+    cout << endl;
 }
 
 void addValue(int matrix[][MAX_COLOANE], int line, int column, int value)
@@ -113,50 +116,65 @@ void Elimin(int matrix[][MAX_COLOANE], int line, int column)
 	{
 		matrix[line][column] = 0;
 	}
+	else
+    {
+        cout << "You choose the wrong celule";
+    }
 }
 
 
 void readEasySudoku(int matrix[][MAX_COLOANE],int easy[][MAX_COLOANE])
 {
 	ifstream f1("Easy.txt");
-	ifstream f1copy("Easycorrect.txt");
+	//ifstream f1copy("Easycorrect.txt");
 	for (int line = 0; line < 9; line++)
 	{
 		for (int column = 0; column < 9; column++)
 		{
 			f1 >> matrix[line][column];
-			f1copy >> easy[line][column];
-			if (matrix[line][column] == 0)
-			{
-				matrix1[line][column].ok = 0;
-			}
-			else
-			{
-				matrix1[line][column].ok = 1;
-			}
+			easy[line][column] = matrix[line][column];
+			matrix1[line][column].ok = 1;
 		}
 	}
 	f1.close();
-	f1copy.close();
+	//f1copy.close();
+
+}
+void random (int matrix[][MAX_COLOANE],int spaceFree)
+{
+    int line, column, index = 0;
+    srand(time(NULL));
+    while(index < spaceFree)
+    {
+
+        line = rand()%9;
+        column = rand()%9;
+        if(matrix[line][column] != 0)
+        {
+            matrix[line][column] = 0;
+            matrix1[line][column].ok = 0;
+            index++;
+        }
+    }
 
 }
 
-bool checkLine(int line, int val, int sudoku[9][9])
+bool checkLine(int line, int value, int matrix[MAX_LINII][MAX_COLOANE])
 {
 	for (int column = 0; column < 9; column++)
 	{
-		if (sudoku[line][column] == val)
+		if (matrix[line][column] == value)
 		{
 			return false;
 		}
 	}
 	return true;
 }
-bool checkColumn(int column, int val, int sudoku[9][9])
+bool checkColumn(int column, int value, int matrix[MAX_LINII][MAX_COLOANE])
 {
 	for (int line = 0; line < 9; line++)
 	{
-		if (sudoku[line][column] == val)
+		if (matrix[line][column] == value)
 		{
 			return false;
 		}
@@ -164,7 +182,7 @@ bool checkColumn(int column, int val, int sudoku[9][9])
 	return true;
 }
 
-bool checkSquare(int line, int column, int val, int sudoku[9][9])
+bool checkSquare(int line, int column, int value, int matrix[MAX_LINII][MAX_COLOANE])
 {
 	int column1 = column % 3;
 	int line1 = line % 3;
@@ -172,7 +190,7 @@ bool checkSquare(int line, int column, int val, int sudoku[9][9])
 	{
 		for (int index2 = column - column1; index2 < column - column1 + 3; index2++)
 		{
-			if (sudoku[index1][index2] == val)
+			if (matrix[index1][index2] == value)
 			{
 				return false;
 			}
@@ -180,9 +198,9 @@ bool checkSquare(int line, int column, int val, int sudoku[9][9])
 	}
 	return true;
 }
-bool valid(int line, int column, int val, int sudoku[9][9])
+bool valid(int line, int column, int value, int matrix[MAX_LINII][MAX_COLOANE])
 {
-	if (checkLine(line, val, sudoku) && checkColumn(column, val, sudoku) && checkSquare(line, column, val, sudoku))
+	if (checkLine(line, value, matrix) && checkColumn(column, value, matrix) && checkSquare(line, column, value, matrix))
 	{
 		return true;
 	}
@@ -204,66 +222,94 @@ bool checkFinal(int matrix[MAX_LINII][MAX_COLOANE], int easy[MAX_LINII][MAX_COLO
 	}
 	return true;
 }
-void easySudoku(int matrix[][MAX_COLOANE], int easy[][MAX_COLOANE])
+void click_ADD (int number,int matrix[][MAX_COLOANE],int &spaceFree)
 {
-	readEasySudoku(matrix,easy);
+    int line, column, value, number1;
+    int correct = 0;
+    while (correct == 0 ||  spaceFree!= 0)
+    {
+        cout << "Enter the values that you need in order : line , column and value for sudoku " << endl;
+        cin >> line >> column >> value;
+        if (line >= 1 && line <= 9 && column >= 1 && column <= 9 && value >= 1 && value <= 9)
+        {
+            cout << "You have " << spaceFree << " more free space " << endl;
+            cout << "If you want to check if you number is good for sudoku , enter < 1 >  else enter < 2 > continue." << endl;
+            cin >> number1;
+            if(number1 == 1)
+            {
+                if(valid(line-1,column-1,value,matrix))
+                {
+                    cout <<"GOOD JOB" << endl;
+                }
+                else
+                {
+                    cout<<"NO, the number is not correct. You have to elimine the number put in sudoku :D" << endl;
+                }
+            }
+
+            spaceFree--;
+            addValue(matrix, line-1, column-1, value);
+            write(matrix);
+            correct = 1;
+          }
+          else
+          {
+              cout << "Enter numbers from 1 to 9";
+          }
+    }
+}
+void click_ELIMINE (int number,int matrix[][MAX_COLOANE],int &spaceFree)
+{
+    int line, column;
+    int correct = 0;
+
+    while (correct == 0)
+    {
+        cout << "Enter the values that you need in order : line and column  ";
+        cin >> line >> column;
+        if (line >= 1 && line <= 9 && column >= 1 && column <= 9)
+        {
+            Elimin(matrix, line-1, column-1);
+            spaceFree++;
+            write(matrix);
+            correct = 1;
+        }
+        else
+        {
+            cout << "Enter numbers from 1 to 9";
+        }
+    }
+}
+void easySudoku(int matrix[][MAX_COLOANE], int easy[][MAX_COLOANE],int &spaceFree)
+{
+	easySudoku:readEasySudoku(matrix,easy);
 	write(matrix);
-	int number, line, column, value;
-	while (!checkFinal)
+	random(matrix,10);
+	write(matrix);
+	int number, number1 , line, column, value;
+	while (!checkFinal(matrix,easy))
 	{
 		int correct1 = 0;
-		while (correct1 == 0)
+		if (correct1 == 0)
 		{
 			cout << "Enter < 1 > ADD a value" << "< 2 > Elimine on value " << "< 3 > Replay " << "< 4 > HELP " << endl;
 			cin >> number;
 			if (number == 1)
 			{
-				int correct = 0;
-
-				while (correct == 0)
-				{
-					cout << "Enter the values that you need in order : line , column and value for sudoku ";
-					cin >> line >> column >> value;
-					if (line >= 1 && line <= 9 && column >= 1 && column <= 9 && value >= 1 && value <= 9)
-					{
-						addValue(matrix, line, column, value);
-						write(matrix);
-						correct = 1;
-					}
-					else
-					{
-						cout << "Enter numbers from 1 to 9";
-					}
-				}
-
+				click_ADD(number,matrix,spaceFree);
 			}
 			else
 			{
 				if (number == 2)
 				{
-					int correct = 0;
-
-					while (correct == 0)
-					{
-						cout << "Enter the values that you need in order : line and column  ";
-						cin >> line >> column;
-						if (line >= 1 && line <= 9 && column >= 1 && column <= 9)
-						{
-							Elimin(matrix, line, column);
-							write(matrix);
-							correct = 1;
-						}
-						else
-						{
-							cout << "Enter numbers from 1 to 9";
-						}
-					}
+					click_ELIMINE(number,matrix,spaceFree);
 				}
 				else
 				{
 					if (number == 3)
 					{
-						readEasySudoku(matrix, easy);
+						readEasySudoku(matrix,easy);
+						write(matrix);
 					}
 					else
 					{
@@ -283,9 +329,17 @@ void easySudoku(int matrix[][MAX_COLOANE], int easy[][MAX_COLOANE])
 		}
 
 	}
+    cout << "Congration!" << endl << "If you want to play more , enter < 1 >";
+    int number2;
+    cin >> number2;
+    if(number2 == 1)
+    {
+        goto easySudoku;
+    }
+
 
 }
-void read_menu(int matrix[][MAX_COLOANE],int easy[][MAX_COLOANE])
+void read_menu(int matrix[][MAX_COLOANE],int easy[][MAX_COLOANE],int spaceFree)
 {
 	cout << "Enter < 1 > to begin the game" << endl << "< 2 > for more info..." << endl;
 	int number;
@@ -297,7 +351,7 @@ void read_menu(int matrix[][MAX_COLOANE],int easy[][MAX_COLOANE])
 		cin >> number;
 		if (number == 1)
 		{
-			easySudoku(matrix,easy);
+			easySudoku(matrix,easy,spaceFree);
 		}
 		/*else
 		{
@@ -351,7 +405,8 @@ void read_menu(int matrix[][MAX_COLOANE],int easy[][MAX_COLOANE])
 int main()
 {
 	int matrix[MAX_LINII][MAX_COLOANE], easy[MAX_LINII][MAX_COLOANE];
-	read_menu(matrix, easy);
+	int spaceFree;
+	read_menu(matrix, easy,spaceFree);
 
 	return 0;
 
