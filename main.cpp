@@ -1,8 +1,4 @@
 #include"Header.h";
-
-
-
-
 void setColor(unsigned short color)
 {
     HANDLE hcon;
