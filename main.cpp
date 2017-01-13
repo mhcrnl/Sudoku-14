@@ -1,19 +1,6 @@
 #include"Header.h";
-void setColor(unsigned short color)
-{
-    HANDLE hcon;
-    hcon = GetStdHandle (STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute (hcon ,color);
-}
-bool fileExists(const std::string& filename)
-{
-    struct stat buf;
-    if (stat(filename.c_str(), &buf) != -1)
-    {
-    return true;
-    }
-    return false;
-}
+
+
 
 void login()
 {
@@ -125,72 +112,7 @@ void Elimin(int matrix[][MAX_COLOANE], int line, int column, int &spaceFree)
         cout << "You choose the wrong celule" << endl;
     }
 }
-void readEasySudoku(int matrix[][MAX_COLOANE],int correct[][MAX_COLOANE])
-{
 
-    ifstream f1("Easy.txt");
-    for (int line = 0; line < 9; line++)
-    {
-        for (int column = 0; column < 9; column++)
-        {
-            f1 >> matrix[line][column];
-            correct[line][column] = matrix[line][column];
-            matrix1[line][column].ok = 1;
-        }
-    }
-    f1.close();
-}
-void readMediumSudoku(int matrix[][MAX_COLOANE],int correct[][MAX_COLOANE])
-{
-
-    ifstream f2("Medium.txt");
-    for (int line = 0; line < 9; line++)
-    {
-        for (int column = 0; column < 9; column++)
-        {
-            f2 >> matrix[line][column];
-            correct[line][column] = matrix[line][column];
-            matrix1[line][column].ok = 1;
-        }
-    }
-    f2.close();
-}
-void readHardSudoku(int matrix[][MAX_COLOANE],int correct[][MAX_COLOANE])
-{
-
-    ifstream f3("Hard.txt");
-    for (int line = 0; line < 9; line++)
-    {
-        for (int column = 0; column < 9; column++)
-        {
-            f3 >> matrix[line][column];
-            correct[line][column] = matrix[line][column];
-            matrix1[line][column].ok = 1;
-        }
-    }
-    f3.close();
-}
-void readSudoku(int matrix[][MAX_COLOANE],int correct[][MAX_COLOANE],int nivel)
-{
-    if(nivel == 1)
-    {
-        readEasySudoku(matrix,correct);
-    }
-    else
-    {
-        if(nivel == 2)
-        {
-            readMediumSudoku(matrix,correct);
-        }
-        else
-        {
-            if(nivel == 3)
-            {
-                readHardSudoku(matrix,correct);
-            }
-        }
-    }
-}
 
 
 void random (int matrix[][MAX_COLOANE],int spaceFree)
